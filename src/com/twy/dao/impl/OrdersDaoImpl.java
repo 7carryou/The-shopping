@@ -18,10 +18,10 @@ public class OrdersDaoImpl implements OrdersDao {
 	private QueryRunner qr = new QueryRunner(DBCPUtil.getDataSource());
 	public void addOrders(Orders o) {
 		try{
-			//±£´æ¶©µ¥µÄ»ù±¾ĞÅÏ¢
+			//ä¿å­˜è®¢å•åŸºæœ¬ä¿¡æ¯
 			qr.update("insert into orders(id,ordersnum,num,money,status,userId) values(?,?,?,?,?,?)", 
 					o.getId(),o.getOrdersnum(),o.getNum(),o.getMoney(),o.getStatus(),o.getUser().getId());
-			//ÅĞ¶Ï¶©µ¥ÖĞÓĞÄ¾ÓĞ¶©µ¥Ïî£ºÈç¹ûÓĞ±£´æ¶©µ¥ÏîĞÅÏ¢
+			//åˆ¤æ–­è®¢å•ä¸­æœ‰æœ¨æœ‰è®¢å•é¡¹ï¼šå¦‚æœæœ‰ä¿å­˜è®¢å•é¡¹ä¿¡æ¯
 			List<OrdersItem> items = o.getItems();
 			if(items!=null&&items.size()>0){
 				Object params[][] = new Object[items.size()][];
@@ -54,7 +54,7 @@ public class OrdersDaoImpl implements OrdersDao {
 	public List<OrdersItem> findOrdersItemByOrdersId(String ordersId) {
 		try{
 			List<OrdersItem> items = qr.query("select * from orders_item where ordersId=?", new BeanListHandler<OrdersItem>(OrdersItem.class), ordersId);
-			//°ÑËû¹ØÁªµÄÊé²éÑ¯³öÀ´
+			//æŠŠä»–å…³è”çš„ä¹¦æŸ¥è¯¢å‡ºæ¥
 			if(items!=null&&items.size()>0){
 				for(OrdersItem item:items){
 					Book book = qr.query("select * from book where id=(select bookId from orders_item where id=?)", new BeanHandler<Book>(Book.class), item.getId());
@@ -68,9 +68,9 @@ public class OrdersDaoImpl implements OrdersDao {
 	}
 	public List<Orders> findOrdersByStatus(int i) {
 		try{
-			//¸ù¾İ¶©µ¥×´Ì¬²éÑ¯¶©µ¥
+			//æ ¹æ®è®¢å•çŠ¶æ€æŸ¥è¯¢è®¢å•
 			List<Orders> orders = qr.query("select * from orders where status=?", new BeanListHandler<Orders>(Orders.class), i);
-			//°Ñ¶©µ¥µÄ¹ºÂòÈË²éÑ¯³öÀ´
+			//æŠŠè®¢å•çš„è´­ä¹°äººæŸ¥è¯¢å‡ºæ¥
 			if(orders!=null&&orders.size()>0){
 				for(Orders o:orders){
 					User user = qr.query("select u.* from user u,orders o where u.id=o.userId and o.id=?", new BeanHandler<User>(User.class), o.getId());
